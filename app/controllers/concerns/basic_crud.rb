@@ -12,7 +12,7 @@ module BasicCrud
     base.class_eval do
       class << self
 
-        [:restrict, :model_class, :model_name, :form_key, :render_overrides].each do |n|
+        [:restrict, :model_class, :model_name, :form_key, :render_overrides, :labels, :footers, :links].each do |n|
           define_method(n) do |*args|
             unless(args.empty?)
               config.send("#{n}=", args.size > 1 ? args : args.first)
@@ -26,7 +26,17 @@ module BasicCrud
 
   # Need to add filtering here based on params (i.e. account_id, etc)
   def index
-    @items = model_class.restrict(current_user).page(params[:page].to_i)
+    container = params.keys.detect{|k| k.to_s.end_with?('_id')}
+    if(container)
+      klass = container.sub('_id', '').classify.constantize
+      base = klass[params[container]]
+      @items = base.send(params[:style])
+      @title = "#{klass.table_name.humanize} #{base}: #{params[:style].humanize.downcase}"
+    else
+      @items = model_class.restrict(current_user)
+      @title = model_class.table_name.humanize.pluralize
+    end
+    @items = Kaminari.paginate_array(@items).page(params[:page].to_i).per(50)
     @keys = model_class.respond_to?(:display_attributes) ? model_class.display_attributes : model_class.attribute_names
     respond_to do |format|
       format.html{ render apply_render }
@@ -67,7 +77,7 @@ module BasicCrud
   end
 
   def edit
-    @item = model_class.restrict(current_user).find_by_id(params[:id])
+    @item = model_class[params[:id]]
     raise Error.new("#{model_name} requested not found", :not_found) unless @item
     respond_to do |format|
       format.html{ render apply_render }
@@ -113,8 +123,18 @@ module BasicCrud
 
   # Find requested model instance
   def fetch_item
-    item = model_class.restrict(current_user).find_by_id(params[:id])
-    item || raise(Error.new("#{model_name} requested not found", :not_found))
+    container = params.keys.detect{|k| k.to_s.end_with?('_id')}
+    klass = container.sub('_id', '').classify.constantize if container
+    if(klass)
+      base = klass[params[container]]
+      item = base.send(params[:style])
+      if(params[:id])
+        raise 'wat. bad id match!' unless item.id == params[:id]
+      end
+      item
+    else
+      model_class[params[:id]]
+    end
   end
 
   # Override these in the controller if you want something custom that
@@ -123,21 +143,17 @@ module BasicCrud
   # How to restrict access. Can be array applied to all actions or
   # hash with action key and array value for specific application
   def restrict
-    self.class.restrict || []
+    []
+#    self.class.restrict || []
   end
 
   # Class of model being handled
   def model_class
     unless(self.class.model_class)
       base = self.class.name.sub(%r{Controller$}, '').singularize
-      unless(Rails.env.production?)
-        # NOTE: Yay autoloading
-        ObjectSpace.const_get(base)
+      klass = ModelBase.descendants.detect do |k|
+        k.name.split('::').last == base
       end
-      klass = ActiveRecord::Base.descendants.detect do |k|
-        k.name == base
-      end
-      p klass
       self.class.model_class(klass)
     end
     self.class.model_class
@@ -160,6 +176,21 @@ module BasicCrud
     self.class.render_overrides || {}
   end
 
+  # Footer overrides to add footer partials to main panel
+  def footers
+    self.class.footers || {}
+  end
+
+  # Label overrides to add labels to data
+  def labels
+    self.class.labels || {}
+  end
+
+  # Links overrides to disable display globally or based on user attribute
+  def links
+    self.class.labels || {}
+  end
+
   ## Okay, all done!
 
   ## internal helpers
@@ -167,6 +198,19 @@ module BasicCrud
   # Return proper render information
   def apply_render
     action = params[:action].to_sym
+    @footer = footers[action] || footers[:default]
+    @labels = labels[action] || labels[:default]
+    unless(links[action] == false)
+      unless(links[:default] == false)
+        link_val = links[action] || links[:default]
+        if(link_val)
+          if(link_val.is_a?(Proc))
+            @links = link_val
+          end
+        end
+        @links ||= proc{|arg|true}
+      end
+    end
     if(val = render_overrides[action])
       val == true ? params[:action] : val
     else

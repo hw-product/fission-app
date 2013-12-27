@@ -12,38 +12,15 @@
     = stylesheet_link_tag 'application', media: 'all'
     = javascript_include_tag 'application'
     = csrf_meta_tags
-    %body
-      %div{class: 'navbar navbar-inverse navbar-static-top'}
-        %div{class: 'navbar-header'}
-          %button{'type' => 'button', 'class' => 'navbar-toggle', 'data-toggle' => 'collapse', 'data-target' => '.navbar-collapse'}
-            %span{class: 'icon-bar'}
-            %span{class: 'icon-bar'}
-            %span{class: 'icon-bar'}
-          %a{class: 'navbar-brand', href: "#"}= Rails.application.config.fission.site_brand
-        %div{class: 'collapse navbar-collapse'}
-          %ul{class: 'nav navbar-nav'}
-            %li.active
-              %a{href: root_url}= 'Dashboard'
-              %li
-                %a{href: accounts_url}= 'Accounts'
-          - if current_user
-            %ul{class: 'nav navbar-nav navbar-right'}
-              %li.dropdown
-                %a{href: '#', 'data-toggle' => 'dropdown'}
-                  %img{class: 'pull-left', src: current_user.identities.first.image, width: 30, height: 30}
-                  %b.caret
-                %ul{class: 'dropdown-menu'}
-                  %li
-                    %a{href: edit_user_url(current_user.id)}= 'Profile'
-                  %li
-                    %a{href: destroy_session_url}= 'Logout'
-      %div.container
-        = render partial: 'layouts/alerts'
-        %div.row
-          %div{class: 'col-md-6 col-md-offset-2', id: 'content'}
-            = yield
-          %div{class: 'col-md-3 col-md-offset-1', id: 'sidebar'}
-            = render partial: 'layouts/side_bar' if valid_user?
-      %div{class: 'navbar navbar-default navbar-fixed-bottom', role: 'footer'}
-        %p{class: 'navbar-text navbar-left'}= "v#{FissionApp::VERSION.version} - #{FissionApp::VERSION.codename}"
-        %p{class: 'navbar-text navbar-right'}!= "&copy; #{Time.now.year}"
+
+  %body{ "data-spy" => "scroll", "data-target" => "#sitenav" }
+    // Site nav
+    = render partial: 'layouts/nav'
+
+    // Main page content
+    %div.navfix#top
+      = render partial: 'layouts/alerts'
+      = yield
+
+    // Footer content
+    = render partial: 'layouts/footer'

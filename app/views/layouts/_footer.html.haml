@@ -1,0 +1,4 @@
+%div.navbar.navbar-default.navbar-fixed-bottom{ role: 'footer' }
+  %div.container
+    %p.navbar-text.navbar-left= "v#{FissionApp::VERSION.version} - #{FissionApp::VERSION.codename}"
+    %p.navbar-text.navbar-right!= "&copy; #{Time.now.year}"

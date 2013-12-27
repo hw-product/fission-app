@@ -1,0 +1,119 @@
+@import "colors";
+@import "buttons";
+
+$nav_height: 51px;
+
+.navfix {
+  padding-top: $nav_height;
+}
+
+.banner {
+  background-color: $color-primary;
+  min-height: 250px;
+  .row {
+    margin: 20px 0px;
+  };
+  .row .col-sm-8, .col-sm-4 {
+    padding: 0px;
+  };
+  h1, h2, h3, h4 {
+    color: $color;
+    margin-top: 0px;
+  };
+  p {
+    color: $color-lightest;
+  };
+  img {
+    float: right;
+    width: 100%;
+  };
+}
+
+.problem {
+  margin-top: 20px;
+  i {
+    font-size: 50px;
+    margin-bottom: 5px;
+  };
+  p {
+    font-size: 125%;
+    text-align: justify;
+  };
+}
+
+.problem:hover {
+  i {
+    font-size: 55px;
+    margin-bottom: 0px;
+  };
+}
+
+.features {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  .feature {
+    margin-bottom: 20px;
+    .icon {
+      height: 90px;
+    };
+    i {
+      color: $color-primary;
+      display: block;
+      text-align: center;
+      font-size: 70px;
+      margin-bottom: 5px;
+    };
+    i:hover {
+      font-size: 75px;
+      margin-bottom: 0px;
+    };
+    h3 {
+      display: block;
+      text-align: center;
+      margin-top: 10px;
+    };
+    p {
+      display: block;
+      text-align: center;
+      margin-bottom: 0px;
+    };
+    a:hover {
+      text-decoration: none;
+    };
+    .btn {
+      display: block;
+      width: 50%;
+      margin-left: auto;
+      margin-right: auto;
+    };
+  }
+}
+
+.solution {
+  background-color: $color-darkest;
+  color: $color;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  .step {
+    .row {
+      padding-top: 10px;
+    }
+    .highlight {
+      margin-top: 0px;
+    };
+    img {
+        margin-top: 0px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        width: 100%;
+        height: 100%;
+    };
+    h2 {
+      margin-top: 0px;
+      display: inline;
+    };
+    h4 {
+      color: $color-lightest;
+    };
+  };
+}

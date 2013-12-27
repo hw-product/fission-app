@@ -1,29 +1,33 @@
 %div{class: 'panel panel-default'}
+  %div{class: 'panel-heading'}= @title
   %div{class: 'panel-body'}
     %table{class: 'table table-bordered table-hover'}
       %thead
         %tr
+          - if @labels
+            %th=''
           - @keys.each do |key|
-            %th= key.humanize
-          %th= 'More'
+            %th= key.to_s.humanize
+          - if @links && @items.first && show_links = @items.first.class.display_links
+            %th= 'More'
       %tbody
-        - @items.each do |obj|
+        - @items.sort{|x,y| x[@keys.first] <=> y[@keys.first]}.each do |obj|
           %tr
+            - if @labels
+              %td
+                - @labels.each do |style, args|
+                  - if obj.send(args[:method])
+                    %span{class: "label label-#{style}"}= args[:text]
             - @keys.each do |key|
-              %td= obj.send(key)
-            %td
-              %div{class: 'dropdown'}
-                %a{href: '#', 'data-toggle' => 'dropdown'}
-                  %b= '+'
-                  %b.caret
-                %ul{class: 'dropdown-menu', role: 'menu', 'aria-labelledby' => 'dLabel'}
-                  - obj.reflections.each do |k, v|
-                    - $stdout.puts "Processing: #{v.inspect}"
-                    - if v.collection?
-                      - next unless self.respond_to?("#{v.klass.table_name.pluralize}_path")
-                      %li
-                        = link_to k.to_s.humanize, send("#{v.klass.table_name.pluralize}_path")
-                    - else
-                      - next unless self.respond_to?("#{v.klass.table_name.singularize}_path")
-                      %li
-                        = link_to k.to_s.humanize, send("#{v.klass.table_name.singularize}_path", obj.send(k))
+              %td.linked{href: send("#{obj.class.table_name.singularize}_url", obj), style: 'cursor: pointer'}= obj.send(key)
+            - if show_links
+              %td= render(partial: 'basic_crud/link_dropdown', locals: {obj: obj, links: @links})
+  - if @footer
+    %div{class: 'panel-footer'}= render(partial: @footer, locals: {obj: @items})
+
+:javascript
+  jQuery(document).ready(function($){
+    $(".linked").click(function(){
+      window.document.location = $(this).attr("href");
+    });
+  });

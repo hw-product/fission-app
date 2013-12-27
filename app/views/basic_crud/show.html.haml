@@ -1,0 +1,15 @@
+%div{class: 'panel panel-primary'}
+  %div{class: 'panel-heading'}= "#{@item.class.table_name.humanize} #{@item}"
+  %div{class: 'panel-body'}
+    - if @links && @item.class.display_links
+      %div{class: 'text-right'}
+        = render(partial: 'basic_crud/link_dropdown', locals: {obj: @item, dropdown_text: 'Linked', links: @links})
+    %table.table
+      %tbody
+        - @item.class.display_attributes.each do |k|
+          %tr
+            %td{:width => '33%'}
+              %b= "#{k.to_s.humanize}:"
+            %td= @item.send(k)
+  - if @footer
+    %div{class: 'panel-footer'}= render(partial: @footer, locals: {obj: @item})

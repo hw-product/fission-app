@@ -1,0 +1,20 @@
+%div{class: 'dropdown btn btn-default'}
+  %a{href: '#', 'data-toggle' => 'dropdown'}
+    %b= defined?(dropdown_text) ? dropdown_text : '+'
+    %b.caret
+  %ul{class: 'dropdown-menu', role: 'menu', 'aria-labelledby' => 'dLabel'}
+    - obj.display_links(current_user).each do |name|
+      - opts = obj.class.associations[name]
+      - next if links.respond_to?(:include?) && !links.include?(name)
+      - next if links.respond_to?(:call) && !links.call(obj)
+      - if opts[:style] == :many
+        - method_name = "#{obj.class.table_name.singularize}_#{opts[:class].table_name}_path"
+        - next unless self.respond_to?(method_name)
+        %li
+          = link_to name.to_s.humanize, send(method_name, obj, :style => name)
+      - else
+        - method_name = "#{obj.class.table_name.singularize}_#{opts[:class].table_name.singularize}_path"
+        - next unless self.respond_to?(method_name)
+        - next unless obj.send(name)
+        %li
+          = link_to name.to_s.humanize, send(method_name, obj, obj.send(name), :style => name)

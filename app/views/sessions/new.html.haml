@@ -1,14 +1,15 @@
-%div{class: 'panel panel-primary'}
-  %div{class: 'panel-heading'}
-    Login
-  %div{class: 'panel-body'}
-    = simple_form_for @session, :url => create_session_url(@provider), :for => 'session' do |f|
-      = f.input :username, :input_html => {:name => 'username'}
-      = f.input :password, :input_html => {:name => 'password'}
-      = f.button :submit
-  %div{class: 'panel-footer'}
-    %div{class: 'pull-right'}
-      %a{href: '/auth/github'}
-        %img{height: 50, width: 50, src: 'http://octodex.github.com/images/daftpunktocat-thomas.gif', alt: 'GH Login', class: 'img-thumbnail'}
-      %a{href: registration_url}= 'Sign Up!'
-    %div{class: 'clearfix'}
+%div.container
+  %div.panel.panel-primary#login
+    %div.panel-heading
+      Login
+    %div.panel-body
+      = simple_form_for @session, :url => authenticate_user_url, :for => 'session' do |f|
+        = f.input :username, :input_html => {:name => 'username'}
+        = f.input :password, :input_html => {:name => 'password'}
+        = f.button :submit
+    %div.panel-footer
+      %div.pull-right
+        %a{href: '/auth/github'}
+          %img{height: 50, width: 50, src: 'http://octodex.github.com/images/daftpunktocat-thomas.gif', alt: 'GH Login', class: 'img-thumbnail'}
+        %a{href: registration_url}= 'Sign Up!'
+      %div.clearfix

@@ -1,6 +1,6 @@
 class SessionsController < ApplicationController
 
-  before_action :validate_user!, :except => [:new, :create, :failure]
+  before_action :validate_user!, :except => [:new, :create, :failure, :authenticate]
 
   def new
     respond_to do |format|
@@ -11,17 +11,37 @@ class SessionsController < ApplicationController
     end
   end
 
+  def authenticate
+    respond_to do |format|
+      format.html do
+        user = User.authenticate(params)
+        if(user)
+          session[:user_id] = user.id
+          redirect_to root_url
+        else
+          raise Error.new('Login failed', :status => :internal_server_error)
+        end
+      end
+    end
+  end
+
   def create
     respond_to do |format|
       format.html do
-        omniauth = request.env['omniauth.auth']
         user = nil
-        case omniauth[:provider].to_sym
+        provider = (params[:provider] || auth_hash.try(:[], :provider)).try(:to_sym)
+        case provider
         when :github
-          ident = Identity.find_or_create_via_omniauth(omniauth)
-          user = ident.user if ident
+          ident = Identity.find_or_create_via_omniauth(auth_hash)
+          user = ident.user
+          # NOTE: This is here only for testing!
+          Rails.logger.info 'Starting account population!'
+          Rails.application.config.backgroundable.trigger!(:job => 'account_populator', :user => user.id)
+          Rails.logger.info 'Repository account population!'
+        when :internal
+          user = User.create(params.merge(:provider => :internal))
         else
-          user = User.where(:username => params[:unique_id]).first
+          raise Error.new('Unsupported provider authentication attempt', :status => :internal_server_error)
         end
         if(user)
           session[:user_id] = user.id
@@ -49,6 +69,12 @@ class SessionsController < ApplicationController
         redirect_to root_url, notice: 'Logged out'
       end
     end
+  end
+
+  protected
+
+  def auth_hash
+    request.env['omniauth.auth']
   end
 
   class Session

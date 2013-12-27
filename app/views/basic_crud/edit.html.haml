@@ -1,0 +1,9 @@
+%div{class: 'panel panel-primary'}
+  %div{class: 'panel-heading'}= "#{@item.class.table_name.humanize} Update"
+  %div{class: 'panel-body'}
+    = form_for @item do |f|
+      = f.simple_fields_for :user do |user_form|
+        - @item.class.display_attributes.each do |attr|
+          = user_form.input attr
+        %br
+        = user_form.button :submit, 'Update'

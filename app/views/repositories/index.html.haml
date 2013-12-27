@@ -1,0 +1,66 @@
+%div{class: 'panel panel-default'}
+  %div{class: 'panel-heading'}= "#{@account.name} Repositories"
+  %div{class: 'panel-body'}
+    %table{class: 'table table-bordered table-hover'}
+      %thead
+        %tr
+          %th= 'Name'
+          %th= 'Location'
+          %th= 'Disable'
+      %tbody
+        - @registered.each do |repo|
+          %tr
+            %td= repo.short_name
+            %td= repo.url
+            %td{class: 'text-center'}
+              %a{href: repository_disable_url(repo, :account_id => @account), style: 'color: red'}
+                %span{class: 'glyphicon glyphicon-remove'}
+
+    %table{class: 'table table-bordered table-hover'}
+      %thead
+        %tr
+          %th= 'Name'
+          %th= 'Location'
+          %th= 'Enable'
+      %tbody
+        - @unregistered.each do |repo|
+          %tr
+            %td= repo.name
+            %td= repo.rels[:git].href
+            %td{class: 'text-center'}
+              %a{:href => '#', 'data-toggle' => 'modal', 'data-target' => '#repo_add_options', style: 'color: green', 'repo-name' => repo.full_name, 'repo-url' => repository_enable_url(Base64.encode64(repo.full_name), :account_id => @account), class: 'repo-enable'}
+                %span{class: 'glyphicon glyphicon-plus'}
+
+  - if @footer
+    %div{class: 'panel-footer'}= render(partial: @footer, locals: {obj: @items})
+
+%div#repo_add_options{:class => 'modal fade', :role => 'modal', 'aria-labelledby' => 'repo_add_options_label', 'aria-hidden' => true}
+  %div{class: 'modal-dialog'}
+    %div{class: 'modal-content'}
+      %div{class: 'modal-header'}
+        %button.close{:type => 'button', 'data-dismiss' => 'modal', 'aria-hidden' => true}
+          &times;
+        %h4#repo_add_title{class: 'modal-title'}= 'Repo enable'
+      %div{class: 'modal-body'}
+        = form_tag '#', :method => :post, :id => 'repo_enable', :role => 'form'  do
+          %div{class: 'form-group'}
+            %label{for: 'branch_filter'}= 'Filter branch'
+            %input#branch_filter{type: 'text', name: 'filter_branch', class: 'form-control', placeholder: 'None'}
+          %button#repo_enable_button{type: 'submit', class: 'btn btn-default'}= 'Submit'
+
+:javascript
+  jQuery(document).ready(function($){
+    var repo_url = null;
+    $(".linked").click(function(){
+      window.document.location = $(this).attr("href");
+    });
+    $(".repo-enable").click(function(){
+      repo_url = $(this).attr("repo-url");
+      $("h4#repo_add_title").text("Enable " + $(this).attr("repo-name"));
+      return true;
+    });
+    $("button#repo_enable_button").click(function(){
+      $('form#repo_enable').attr("action", repo_url);
+      $('form#repo_enable').submit();
+    });
+  });
