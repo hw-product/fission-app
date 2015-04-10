@@ -2,4 +2,9 @@
   container_class ||= nil
   container_id ||= nil
 .container.container-padding{:class => container_class, :id => container_id}
-  = content_for?(:container) ? content_for(:container) : yield
+  - if defined?(container_content)
+    = container_content
+  - elsif defined?(container_content_name) && content_for?(container_content_name)
+    = yield container_content_name
+  - else
+    = yield
