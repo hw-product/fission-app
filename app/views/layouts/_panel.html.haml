@@ -1,0 +1,13 @@
+- id ||= ''
+%div.panel.panel-default{ id: id }
+  %div.panel-heading
+    = heading
+  %div.panel-body
+    - if defined?(panel_content)
+      = panel_content
+    - elsif defined?(panel_content_name) && content_for?(panel_content_name)
+      = yield panel_content_name
+    - elsif content_for?(:panel)
+      = yield :panel
+    - else
+      = yield

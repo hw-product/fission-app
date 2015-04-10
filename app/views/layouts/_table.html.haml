@@ -1,0 +1,10 @@
+%table.table.table-hover
+  %thead
+    %tr
+      - header_data.each do |header|
+        %th= header
+  - data.each do |values|
+    %tr
+      - values.each do |value|
+        %td= value
+
