@@ -6,5 +6,7 @@
     = container_content
   - elsif defined?(container_content_name) && content_for?(container_content_name)
     = yield container_content_name
+  - elsif content_for?(:container)
+    = yield :container
   - else
     = yield
