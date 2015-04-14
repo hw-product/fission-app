@@ -1,5 +1,5 @@
 {
-  "site_brand": "Packager",
+  "site_brand": "Fission",
   "site_beta": true,
   "json_style": "jsend",
   "intercom_io": {
@@ -15,17 +15,33 @@
     "default_property": "packager.co"
   },
   "fission": {
-    "rest_endpoint": "http://snowflake.hw-ops.com",
-    "rest_endpoint_ssl": "https://snowflake.hw-ops.com"
+    "rest_endpoint": "http://571f320e.ngrok.com",
+    "rest_endpoint_ssl": "http://571f320e.ngrok.com",
+    "assets": {
+      "bucket": "fission-assets-testing",
+      "connection": {
+        "provider": "local",
+        "credentials": {
+          "object_store_root": "/tmp/fission-local-assets"
+        }
+      }
+    }
   },
   "github": {
+    "dev.packager.co": {
+      "key": "065cdd509e767dbc97cc",
+      "secret": "d7513658cba6b2c467622cf1b90e7dccd446cad5"
+    },
+    "default": {
+      "key": "065cdd509e767dbc97cc",
+      "secret": "d7513658cba6b2c467622cf1b90e7dccd446cad5"
+    },
     "username": "d2obot",
     "token": "01da24df42e5e212be565b4ee5f223231af7b3fe"
   },
-  "whitelist": {
-    "users": [
-      "chrisroberts"
-    ]
+  "god": {
+    "source": "github",
+    "username": "ckuttruff"
   },
   "stripe": {
     "publishable_key": "pk_test_y4g9kOk27pcJES5iZ5Sp7LK2",
@@ -34,135 +50,5 @@
   "static_pages": {
     "path": null,
     "landing": "/"
-  },
-  "pricing": {
-    "packager": {
-      "bronze": {
-        "title": "Bronze",
-        "summary": "Ship 1 release per day.",
-        "price": "19900",
-        "description": [
-          {
-            "label": "30 releases/mo",
-            "icon": "fa-plus-square"
-          },
-          {
-            "label": "Unlimited Repos",
-            "icon": "fa-plus-square"
-          },
-          {
-            "label": "Unlimited users",
-            "icon": "fa-plus-square"
-          },
-          {
-            "label": "",
-            "icon": ""
-          },
-          {
-            "label": "",
-            "icon": ""
-          },
-          {
-            "label": "",
-            "icon": ""
-          }
-        ]
-      },
-      "silver": {
-        "title": "Silver",
-        "summary": "Ship 3 releases per day.",
-        "price": "49900",
-        "description": [
-          {
-            "label": "90 releases/mo",
-            "icon": "fa-plus-square"
-          },
-          {
-            "label": "Unlimited Repos",
-            "icon": "fa-plus-square"
-          },
-          {
-            "label": "Unlimited users",
-            "icon": "fa-plus-square"
-          },
-          {
-            "label": "",
-            "icon": ""
-          },
-          {
-            "label": "",
-            "icon": ""
-          },
-          {
-            "label": "",
-            "icon": ""
-          }
-        ]
-      },
-      "gold": {
-        "title": "Gold",
-        "summary": "Ship 10 releases per day.",
-        "price": "129900",
-        "description": [
-          {
-            "label": "300 releases/mo",
-            "icon": "fa-plus-square"
-          },
-          {
-            "label": "Unlimited Repos",
-            "icon": "fa-plus-square"
-          },
-          {
-            "label": "Unlimited users",
-            "icon": "fa-plus-square"
-          },
-          {
-            "label": "Private Repository",
-            "icon": "fa-plus-square"
-          },
-          {
-            "label": "",
-            "icon": ""
-          },
-          {
-            "label": "",
-            "icon": ""
-          }
-        ]
-      },
-      "platinum": {
-        "title": "Platinum",
-        "summary": "Ship 30+ releases per day.",
-        "price": "299900",
-        "description": [
-          {
-            "label": "1000+ releases/mo",
-            "icon": "fa-plus-square"
-          },
-          {
-            "label": "Unlimited Repos",
-            "icon": "fa-plus-square"
-          },
-          {
-            "label": "Unlimited users",
-            "icon": "fa-plus-square"
-          },
-          {
-            "label": "Private Repository",
-            "icon": "fa-plus-square"
-          },
-          {
-            "label": "Dedicated <abbr title='Continuous Integration'>CI</abbr> Server(s)",
-            "icon": "fa-plus-square"
-          },
-          {
-            "label": "Optional Support",
-            "icon": "fa-plus-square"
-          }
-        ]
-      }
-    },
-    "nellie": {
-    }
   }
 }

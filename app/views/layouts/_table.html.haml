@@ -1,4 +1,6 @@
-%table.table.table-hover
+- table_class ||= ''
+
+%table.table.table-hover{ :class => table_class }
   %thead
     %tr
       - header_data.each do |header|
