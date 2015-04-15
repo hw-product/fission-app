@@ -1,8 +1,11 @@
 - id ||= ''
-%div.panel.panel-default{ id: id }
+- panel_class ||= ''
+- body_id     ||= ''
+
+%div.panel.panel-default{ :id => id, :class =>  panel_class }
   %div.panel-heading
     = heading
-  %div.panel-body
+  %div.panel-body{ :id => body_id }
     - if defined?(panel_content)
       = panel_content
     - elsif defined?(panel_content_name) && content_for?(panel_content_name)

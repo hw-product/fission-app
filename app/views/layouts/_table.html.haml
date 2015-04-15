@@ -1,7 +1,8 @@
+- table_id       ||= ''
 - table_class    ||= ''
 - header_classes ||= (1..header_data.count).map{ '' }
 
-%table.table.table-hover{ :class => table_class }
+%table.table.table-hover{ :class => table_class, :id => table_id }
   %thead
     %tr
       - header_data.each_with_index do |header, i|
