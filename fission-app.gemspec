@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'will_paginate'
   s.add_dependency 'will_paginate-bootstrap'
   s.add_dependency 'content_for_in_controllers'
-  s.add_dependency 'cells'
+  s.add_dependency 'cells', '< 4.0.0'
   s.add_dependency 'lograge'
   s.add_dependency 'bogo-config'
   s.executables << 'fission-app'

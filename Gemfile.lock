@@ -8,9 +8,9 @@ GIT
 PATH
   remote: .
   specs:
-    fission-app (0.1.12)
+    fission-app (0.1.13)
       bogo-config
-      cells
+      cells (< 4.0.0)
       content_for_in_controllers
       fission-assets
       fission-data
@@ -172,10 +172,6 @@ GEM
       libyajl2 (~> 1.2)
     fission (0.2.4)
       jackal (>= 0.3.4, < 1.0.0)
-    fission-app-configs (0.1.4)
-      fission-app
-      fission-app-services
-      fission-data
     fission-app-docs (0.1.2)
       kramdown
     fission-app-jobs (0.1.8)
@@ -398,7 +394,7 @@ GEM
       kramdown
     libv8 (3.16.14.7)
     libyajl2 (1.2.0)
-    lograge (0.3.2)
+    lograge (0.3.4)
       actionpack (>= 3)
       activesupport (>= 3)
       railties (>= 3)
@@ -673,7 +669,6 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   fission!
   fission-app!
-  fission-app-configs!
   fission-app-docs!
   fission-app-jobs!
   fission-app-multiuser!
@@ -716,3 +711,6 @@ DEPENDENCIES
   warbler (= 1.4.0)
   will_paginate
   window_rails
+
+BUNDLED WITH
+   1.10.3
